@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tree Name Practice - Made for You by Han</title>
+    <title>Botanical Name Practice</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
         }
-        #question {
+        .question {
             margin: 20px 0;
             font-size: 18px;
         }
-        #result {
+        .options {
+            margin: 10px 0;
+        }
+        .result {
             margin-top: 20px;
             font-size: 16px;
             font-weight: bold;
@@ -21,137 +24,138 @@
     </style>
 </head>
 <body>
-    <h1>Tree Name Practice - Made for You by Han</h1>
-    <p>Select groups to practice:</p>
-    <form id="group-form">
-        <label><input type="checkbox" name="group" value="Group 1"> Group 1</label><br>
-        <label><input type="checkbox" name="group" value="Group 2"> Group 2</label><br>
-        <label><input type="checkbox" name="group" value="Group 3"> Group 3</label><br>
-        <label><input type="checkbox" name="group" value="Group 4"> Group 4</label><br>
-        <label><input type="checkbox" name="group" value="Group 5"> Group 5</label><br>
-        <label><input type="checkbox" name="group" value="Group 6"> Group 6</label><br>
-        <label><input type="checkbox" name="group" value="Group 7"> Group 7</label><br>
-        <button type="button" onclick="startPractice()">Start Practice</button>
-    </form>
-
-    <div id="flashcard" style="display: none;">
-        <p id="question"></p>
-        <input type="text" id="answer" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="Your Answer" onkeydown="if(event.key === 'Enter') { event.preventDefault(); checkAnswer(); }">
-        <button onclick="checkAnswer()">Submit</button>
-        <p id="result"></p>
+    <h1>Botanical Name Practice</h1>
+    <p>Choose your mode:</p>
+    <button onclick="startTypingPractice()">Typing Mode</button>
+    <button onclick="startMultipleChoice()">Multiple Choice Mode</button>
+    <div id="practice-area" style="display: none;">
+        <p id="question" class="question"></p>
+        <div id="options" class="options"></div>
+        <input type="text" id="answer" style="display: none;" placeholder="Type your answer here">
+        <button id="submit-btn" style="display: none;" onclick="checkTypingAnswer()">Submit</button>
+        <p id="result" class="result"></p>
+        <button id="next-btn" style="display: none;" onclick="nextQuestion()">Next</button>
     </div>
-
     <script>
         const treeGroups = {
             "Group 1": [
-                { botanical: "Betula pendula", common: "European White Birch" },
+                { botanical: "Betula pendula", common: "Silver Birch" },
                 { botanical: "Betula papyrifera", common: "Paper Birch" },
                 { botanical: "Betula alleghaniensis", common: "Yellow Birch" },
-                { botanical: "Betula nigra", common: "River Birch" },
-                { botanical: "Alnus glutinosa", common: "Black Alder" },
-                { botanical: "Carpinus caroliniana", common: "American Hornbeam" },
-                { botanical: "Ostrya virginiana", common: "Eastern Hophornbeam" },
-                { botanical: "Corylus colurna", common: "Turkish Hazel" }
+                { botanical: "Betula nigra", common: "River Birch" }
             ],
             "Group 2": [
                 { botanical: "Gleditsia triacanthos", common: "Honey Locust" },
                 { botanical: "Gymnocladus dioicus", common: "Kentucky Coffeetree" },
                 { botanical: "Robinia pseudoacacia", common: "Black Locust" },
-                { botanical: "Cercis canadensis", common: "Eastern Redbud" },
-                { botanical: "Celtis occidentalis", common: "Common Hackberry" },
-                { botanical: "Ginkgo biloba", common: "Ginkgo" },
-                { botanical: "Ailanthus altissima", common: "Tree of Heaven" },
-                { botanical: "Sorbus americana", common: "American Mountain Ash" }
-            ],
-            "Group 3": [
-                { botanical: "Platanus occidentalis", common: "American Sycamore" },
-                { botanical: "Platanus x acerifolia", common: "London Plane" },
-                { botanical: "Tilia cordata", common: "Littleleaf Linden" },
-                { botanical: "Tilia americana", common: "American Linden" },
-                { botanical: "Liriodendron tulipifera", common: "Tulip Tree" },
-                { botanical: "Magnolia acuminata", common: "Cucumber Magnolia" },
-                { botanical: "Liquidambar styraciflua", common: "Sweetgum" },
-                { botanical: "Salix fragilis", common: "Crack Willow" }
-            ],
-            "Group 4": [
-                { botanical: "Amelanchier arborea", common: "Downy Serviceberry" },
-                { botanical: "Crataegus spp.", common: "Hawthorn" },
-                { botanical: "Malus spp.", common: "Apple" },
-                { botanical: "Prunus pensylvanica", common: "Pin Cherry" },
-                { botanical: "Prunus serotina", common: "Black Cherry" },
-                { botanical: "Prunus virginiana", common: "Chokecherry" },
-                { botanical: "Pyrus calleryana 'Chanticleer'", common: "Callery Pear" }
-            ],
-            "Group 5": [
-                { botanical: "Aralia elata", common: "Japanese Angelica Tree" },
-                { botanical: "Elaeagnus angustifolia", common: "Russian Olive" },
-                { botanical: "Rhamnus cathartica", common: "Common Buckthorn" },
-                { botanical: "Rhus typhina", common: "Staghorn Sumac" },
-                { botanical: "Nyssa sylvatica", common: "Black Tupelo" },
-                { botanical: "Morus alba", common: "White Mulberry" },
-                { botanical: "Morus rubra", common: "Red Mulberry" }
-            ],
-            "Group 6": [
-                { botanical: "Populus alba", common: "White Poplar" },
-                { botanical: "Populus balsamifera", common: "Balsam Poplar" },
-                { botanical: "Populus x canadensis", common: "Hybrid Poplar" },
-                { botanical: "Populus grandidentata", common: "Bigtooth Aspen" },
-                { botanical: "Populus nigra 'Italica'", common: "Lombardy Poplar" },
-                { botanical: "Populus tremuloides", common: "Quaking Aspen" },
-                { botanical: "Salix alba 'Tristis'", common: "Golden Weeping Willow" }
-            ],
-            "Group 7": [
-                { botanical: "Ulmus americana", common: "American Elm" },
-                { botanical: "Ulmus glabra", common: "Wych Elm" },
-                { botanical: "Ulmus procera", common: "English Elm" },
-                { botanical: "Ulmus pumila", common: "Siberian Elm" },
-                { botanical: "Ulmus rubra", common: "Slippery Elm" }
+                { botanical: "Cercis canadensis", common: "Eastern Redbud" }
             ]
         };
 
-        let selectedGroups = [];
-        let currentQuestion = null;
-        let currentAnswer = null;
+        let selectedMode = "";
+        let questions = [];
+        let currentQuestionIndex = 0;
 
-        function startPractice() {
-            const checkboxes = document.querySelectorAll("input[name='group']:checked");
-            selectedGroups = Array.from(checkboxes).map(checkbox => checkbox.value);
-
-            if (selectedGroups.length === 0) {
-                alert("Please select at least one group.");
-                return;
-            }
-
-            generateQuestion();
-            document.getElementById("group-form").style.display = "none";
-            document.getElementById("flashcard").style.display = "block";
+        function startTypingPractice() {
+            selectedMode = "typing";
+            initializeQuestions();
+            showQuestion();
         }
 
-        function generateQuestion() {
-            const group = selectedGroups[Math.floor(Math.random() * selectedGroups.length)];
-            const treeList = treeGroups[group];
-            const tree = treeList[Math.floor(Math.random() * treeList.length)];
-            currentAnswer = tree.botanical;
-            currentQuestion = tree.common;
+        function startMultipleChoice() {
+            selectedMode = "multiple-choice";
+            initializeQuestions();
+            showQuestion();
+        }
 
-            document.getElementById("question").textContent = `What is the botanical name for '${currentQuestion}'?`;
-            document.getElementById("answer").value = "";
+        function initializeQuestions() {
+            questions = Object.values(treeGroups).flat();
+            questions = questions.sort(() => Math.random() - 0.5); // Shuffle questions
+            currentQuestionIndex = 0;
+            document.getElementById("practice-area").style.display = "block";
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestionIndex];
             document.getElementById("result").textContent = "";
+            document.getElementById("next-btn").style.display = "none";
+
+            if (selectedMode === "typing") {
+                document.getElementById("question").textContent = `What is the botanical name for '${question.common}'?`;
+                document.getElementById("answer").style.display = "block";
+                document.getElementById("submit-btn").style.display = "block";
+                document.getElementById("options").style.display = "none";
+            } else if (selectedMode === "multiple-choice") {
+                document.getElementById("question").textContent = `What is the botanical name for '${question.common}'?`;
+                const optionsDiv = document.getElementById("options");
+                optionsDiv.innerHTML = ""; // Clear previous options
+                const correctAnswer = question.botanical;
+                const choices = shuffle([
+                    ...getRandomChoices(question.botanical, 3),
+                    correctAnswer
+                ]);
+
+                choices.forEach((choice, index) => {
+                    const button = document.createElement("button");
+                    button.textContent = choice;
+                    button.onclick = () => checkMultipleChoiceAnswer(choice, correctAnswer);
+                    optionsDiv.appendChild(button);
+                });
+
+                document.getElementById("answer").style.display = "none";
+                document.getElementById("submit-btn").style.display = "none";
+                optionsDiv.style.display = "block";
+            }
         }
 
-        function checkAnswer() {
+        function checkTypingAnswer() {
+            const question = questions[currentQuestionIndex];
             const userAnswer = document.getElementById("answer").value.trim();
-            if (userAnswer.toLowerCase() === currentAnswer.toLowerCase()) {
-                document.getElementById("result").textContent = "Correct!";
-                document.getElementById("result").style.color = "green";
-                setTimeout(() => generateQuestion(), 1000);
+            const resultDiv = document.getElementById("result");
+            if (userAnswer.toLowerCase() === question.botanical.toLowerCase()) {
+                resultDiv.textContent = "Correct!";
+                resultDiv.style.color = "green";
             } else {
-                document.getElementById("result").textContent = `Oops! The correct answer is '${currentAnswer}'.`;
-                document.getElementById("result").style.color = "red";
-                setTimeout(() => generateQuestion(), 2000);
+                resultDiv.textContent = `Oops! The correct answer is '${question.botanical}'.`;
+                resultDiv.style.color = "red";
             }
+            document.getElementById("next-btn").style.display = "block";
+        }
+
+        function checkMultipleChoiceAnswer(choice, correctAnswer) {
+            const resultDiv = document.getElementById("result");
+            if (choice === correctAnswer) {
+                resultDiv.textContent = "Correct!";
+                resultDiv.style.color = "green";
+            } else {
+                resultDiv.textContent = `Oops! The correct answer is '${correctAnswer}'.`;
+                resultDiv.style.color = "red";
+            }
+            document.getElementById("next-btn").style.display = "block";
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                alert("You have completed the practice!");
+                document.getElementById("practice-area").style.display = "none";
+            }
+        }
+
+        function getRandomChoices(correctAnswer, numChoices) {
+            const group = Object.values(treeGroups).flat();
+            const otherChoices = group.filter(tree => tree.botanical !== correctAnswer);
+            return otherChoices
+                .sort(() => Math.random() - 0.5)
+                .slice(0, numChoices)
+                .map(tree => tree.botanical);
+        }
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
         }
     </script>
 </body>
 </html>
- 
