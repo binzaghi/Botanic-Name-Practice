@@ -37,14 +37,24 @@
         #next-btn {
             display: none;
         }
+        #question {
+            font-size: 18px;
+        }
+        #tree-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
-    <h1>Botanical Name Practice</h1>
+    <h1 style="font-size: 24px;">Master Botanical Names - Provided by Han</h1>
     <p>Choose your mode:</p>
     <button onclick="startTypingPractice()">Typing Mode</button>
     <button onclick="startMultipleChoice()">Multiple Choice Mode</button>
     <div id="practice-area" style="display: none;">
+        <img id="tree-image" src="" alt="Tree image">
         <p id="question" class="question"></p>
         <div id="options" class="options"></div>
         <input type="text" id="answer" style="display: none;" placeholder="Type your answer here">
@@ -55,16 +65,16 @@
     <script>
         const treeGroups = {
             "Group 1": [
-                { botanical: "Betula pendula", common: "Silver Birch" },
-                { botanical: "Betula papyrifera", common: "Paper Birch" },
-                { botanical: "Betula alleghaniensis", common: "Yellow Birch" },
-                { botanical: "Betula nigra", common: "River Birch" }
+                { botanical: "Betula pendula", common: "Silver Birch", image: "https://example.com/silver_birch.jpg" },
+                { botanical: "Betula papyrifera", common: "Paper Birch", image: "https://example.com/paper_birch.jpg" },
+                { botanical: "Betula alleghaniensis", common: "Yellow Birch", image: "https://example.com/yellow_birch.jpg" },
+                { botanical: "Betula nigra", common: "River Birch", image: "https://example.com/river_birch.jpg" }
             ],
             "Group 2": [
-                { botanical: "Gleditsia triacanthos", common: "Honey Locust" },
-                { botanical: "Gymnocladus dioicus", common: "Kentucky Coffeetree" },
-                { botanical: "Robinia pseudoacacia", common: "Black Locust" },
-                { botanical: "Cercis canadensis", common: "Eastern Redbud" }
+                { botanical: "Gleditsia triacanthos", common: "Honey Locust", image: "https://example.com/honey_locust.jpg" },
+                { botanical: "Gymnocladus dioicus", common: "Kentucky Coffeetree", image: "https://example.com/kentucky_coffeetree.jpg" },
+                { botanical: "Robinia pseudoacacia", common: "Black Locust", image: "https://example.com/black_locust.jpg" },
+                { botanical: "Cercis canadensis", common: "Eastern Redbud", image: "https://example.com/eastern_redbud.jpg" }
             ]
         };
 
@@ -95,6 +105,8 @@
             const question = questions[currentQuestionIndex];
             document.getElementById("result").textContent = "";
             document.getElementById("next-btn").style.display = "none";
+            document.getElementById("tree-image").src = question.image;
+            document.getElementById("tree-image").alt = question.common;
 
             if (selectedMode === "typing") {
                 document.getElementById("question").textContent = `What is the botanical name for '${question.common}'?`;
