@@ -1,0 +1,164 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2759
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!DOCTYPE html>\
+<html lang="en">\
+<head>\
+    <meta charset="UTF-8">\
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+    <title>Botanical Name Flashcards - Made for You by Han</title>\
+    <style>\
+        body \{\
+            font-family: Arial, sans-serif;\
+            margin: 20px;\
+        \}\
+        #question \{\
+            margin: 20px 0;\
+            font-size: 18px;\
+        \}\
+        #result \{\
+            margin-top: 20px;\
+            font-size: 16px;\
+            font-weight: bold;\
+        \}\
+    </style>\
+</head>\
+<body>\
+    <h1>Botanical Name Flashcards - Made for You by Han</h1>\
+    <p>Select groups to practice:</p>\
+    <form id="group-form">\
+        <label><input type="checkbox" name="group" value="Group 1"> Group 1</label><br>\
+        <label><input type="checkbox" name="group" value="Group 2"> Group 2</label><br>\
+        <label><input type="checkbox" name="group" value="Group 3"> Group 3</label><br>\
+        <label><input type="checkbox" name="group" value="Group 4"> Group 4</label><br>\
+        <label><input type="checkbox" name="group" value="Group 5"> Group 5</label><br>\
+        <label><input type="checkbox" name="group" value="Group 6"> Group 6</label><br>\
+        <label><input type="checkbox" name="group" value="Group 7"> Group 7</label><br>\
+        <button type="button" onclick="startPractice()">Start Practice</button>\
+    </form>\
+\
+    <div id="flashcard" style="display: none;">\
+        <p id="question"></p>\
+        <input type="text" id="answer" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="Your Answer" onkeydown="if(event.key === 'Enter') \{ event.preventDefault(); checkAnswer(); \}">\
+        <button onclick="checkAnswer()">Submit</button>\
+        <p id="result"></p>\
+    </div>\
+\
+    <script>\
+        const treeGroups = \{\
+            "Group 1": [\
+                \{ botanical: "Betula pendula", common: "European White Birch" \},\
+                \{ botanical: "Betula papyrifera", common: "Paper Birch" \},\
+                \{ botanical: "Betula alleghaniensis", common: "Yellow Birch" \},\
+                \{ botanical: "Betula nigra", common: "River Birch" \},\
+                \{ botanical: "Alnus glutinosa", common: "Black Alder" \},\
+                \{ botanical: "Carpinus caroliniana", common: "American Hornbeam" \},\
+                \{ botanical: "Ostrya virginiana", common: "Eastern Hophornbeam" \},\
+                \{ botanical: "Corylus colurna", common: "Turkish Hazel" \}\
+            ],\
+            "Group 2": [\
+                \{ botanical: "Gleditsia triacanthos", common: "Honey Locust" \},\
+                \{ botanical: "Gymnocladus dioicus", common: "Kentucky Coffeetree" \},\
+                \{ botanical: "Robinia pseudoacacia", common: "Black Locust" \},\
+                \{ botanical: "Cercis canadensis", common: "Eastern Redbud" \},\
+                \{ botanical: "Celtis occidentalis", common: "Common Hackberry" \},\
+                \{ botanical: "Ginkgo biloba", common: "Ginkgo" \},\
+                \{ botanical: "Ailanthus altissima", common: "Tree of Heaven" \},\
+                \{ botanical: "Sorbus americana", common: "American Mountain Ash" \}\
+            ],\
+            "Group 3": [\
+                \{ botanical: "Platanus occidentalis", common: "American Sycamore" \},\
+                \{ botanical: "Platanus x acerifolia", common: "London Plane" \},\
+                \{ botanical: "Tilia cordata", common: "Littleleaf Linden" \},\
+                \{ botanical: "Tilia americana", common: "American Linden" \},\
+                \{ botanical: "Liriodendron tulipifera", common: "Tulip Tree" \},\
+                \{ botanical: "Magnolia acuminata", common: "Cucumber Magnolia" \},\
+                \{ botanical: "Liquidambar styraciflua", common: "Sweetgum" \},\
+                \{ botanical: "Salix fragilis", common: "Crack Willow" \}\
+            ],\
+            "Group 4": [\
+                \{ botanical: "Amelanchier arborea", common: "Downy Serviceberry" \},\
+                \{ botanical: "Crataegus spp.", common: "Hawthorn" \},\
+                \{ botanical: "Malus spp.", common: "Apple" \},\
+                \{ botanical: "Prunus pensylvanica", common: "Pin Cherry" \},\
+                \{ botanical: "Prunus serotina", common: "Black Cherry" \},\
+                \{ botanical: "Prunus virginiana", common: "Chokecherry" \},\
+                \{ botanical: "Pyrus calleryana 'Chanticleer'", common: "Callery Pear" \}\
+            ],\
+            "Group 5": [\
+                \{ botanical: "Aralia elata", common: "Japanese Angelica Tree" \},\
+                \{ botanical: "Elaeagnus angustifolia", common: "Russian Olive" \},\
+                \{ botanical: "Rhamnus cathartica", common: "Common Buckthorn" \},\
+                \{ botanical: "Rhus typhina", common: "Staghorn Sumac" \},\
+                \{ botanical: "Nyssa sylvatica", common: "Black Tupelo" \},\
+                \{ botanical: "Morus alba", common: "White Mulberry" \},\
+                \{ botanical: "Morus rubra", common: "Red Mulberry" \}\
+            ],\
+            "Group 6": [\
+                \{ botanical: "Populus alba", common: "White Poplar" \},\
+                \{ botanical: "Populus balsamifera", common: "Balsam Poplar" \},\
+                \{ botanical: "Populus x canadensis", common: "Hybrid Poplar" \},\
+                \{ botanical: "Populus grandidentata", common: "Bigtooth Aspen" \},\
+                \{ botanical: "Populus nigra 'Italica'", common: "Lombardy Poplar" \},\
+                \{ botanical: "Populus tremuloides", common: "Quaking Aspen" \},\
+                \{ botanical: "Salix alba 'Tristis'", common: "Golden Weeping Willow" \}\
+            ],\
+            "Group 7": [\
+                \{ botanical: "Ulmus americana", common: "American Elm" \},\
+                \{ botanical: "Ulmus glabra", common: "Wych Elm" \},\
+                \{ botanical: "Ulmus procera", common: "English Elm" \},\
+                \{ botanical: "Ulmus pumila", common: "Siberian Elm" \},\
+                \{ botanical: "Ulmus rubra", common: "Slippery Elm" \}\
+            ]\
+        \};\
+\
+        let selectedGroups = [];\
+        let currentQuestion = null;\
+        let currentAnswer = null;\
+\
+        function startPractice() \{\
+            const checkboxes = document.querySelectorAll("input[name='group']:checked");\
+            selectedGroups = Array.from(checkboxes).map(checkbox => checkbox.value);\
+\
+            if (selectedGroups.length === 0) \{\
+                alert("Please select at least one group.");\
+                return;\
+            \}\
+\
+            generateQuestion();\
+            document.getElementById("group-form").style.display = "none";\
+            document.getElementById("flashcard").style.display = "block";\
+        \}\
+\
+        function generateQuestion() \{\
+            const group = selectedGroups[Math.floor(Math.random() * selectedGroups.length)];\
+            const treeList = treeGroups[group];\
+            const tree = treeList[Math.floor(Math.random() * treeList.length)];\
+            currentAnswer = tree.botanical;\
+            currentQuestion = tree.common;\
+\
+            document.getElementById("question").textContent = `What is the botanical name for '$\{currentQuestion\}'?`;\
+            document.getElementById("answer").value = "";\
+            document.getElementById("result").textContent = "";\
+        \}\
+\
+        function checkAnswer() \{\
+            const userAnswer = document.getElementById("answer").value.trim();\
+            if (userAnswer.toLowerCase() === currentAnswer.toLowerCase()) \{\
+                document.getElementById("result").textContent = "Correct!";\
+                document.getElementById("result").style.color = "green";\
+                setTimeout(() => generateQuestion(), 1000);\
+            \} else \{\
+                document.getElementById("result").textContent = `Oops! The correct answer is '$\{currentAnswer\}'.`;\
+                document.getElementById("result").style.color = "red";\
+                setTimeout(() => generateQuestion(), 2000);\
+            \}\
+        \}\
+    </script>\
+</body>\
+</html>\
+}
