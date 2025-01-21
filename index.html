@@ -42,12 +42,6 @@
             font-size: 22px;
             font-weight: bold;
         }
-        #tree-image {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 20px 0;
-        }
         #answer {
             font-size: 18px;
             padding: 10px;
@@ -64,7 +58,6 @@
     <button onclick="startTypingPractice()">Typing Mode</button>
     <button onclick="startMultipleChoice()">Multiple Choice Mode</button>
     <div id="practice-area" style="display: none;">
-        <img id="tree-image" src="" alt="Tree image">
         <p id="question" class="question"></p>
         <div id="options" class="options"></div>
         <input type="text" id="answer" style="display: none;" placeholder="Type your answer here">
@@ -77,45 +70,37 @@
             "Group 1": [
                 {
                     botanical: "Betula pendula",
-                    common: ["Silver Birch", "European White Birch"],
-                    image: "https://upload.wikimedia.org/wikipedia/commons/e/e8/Betula_pendula_001.jpg"
+                    common: ["European White Birch", "Silver Birch", ]
                 },
                 {
                     botanical: "Betula papyrifera",
-                    common: ["Paper Birch", "Canoe Birch", "White Birch"],
-                    image: "https://upload.wikimedia.org/wikipedia/commons/8/8e/Betula_papyrifera.jpg"
+                    common: ["Paper Birch", "Canoe Birch"]
                 },
                 {
                     botanical: "Betula alleghaniensis",
-                    common: ["Yellow Birch", "Golden Birch"],
-                    image: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Betula_alleghaniensis.jpg"
+                    common: ["Yellow Birch", "Golden Birch"]
                 },
                 {
                     botanical: "Betula nigra",
-                    common: ["River Birch", "Black Birch", "Water Birch"],
-                    image: "https://upload.wikimedia.org/wikipedia/commons/5/55/Betula_nigra.jpg"
+                    common: ["River Birch", "Black Birch", "Water Birch"]
                 }
             ],
             "Group 2": [
                 {
                     botanical: "Gleditsia triacanthos",
-                    common: ["Honey Locust", "Sweet Locust", "Thorny Locust"],
-                    image: "https://upload.wikimedia.org/wikipedia/commons/b/b0/Gleditsia_triacanthos.jpg"
+                    common: ["Honey Locust", "Sweet Locust", "Thorny Locust"]
                 },
                 {
                     botanical: "Gymnocladus dioicus",
-                    common: ["Kentucky Coffeetree", "American Coffee Tree"],
-                    image: "https://upload.wikimedia.org/wikipedia/commons/a/ae/Gymnocladus_dioicus.jpg"
+                    common: ["Kentucky Coffeetree", "American Coffee Tree"]
                 },
                 {
                     botanical: "Robinia pseudoacacia",
-                    common: ["Black Locust", "False Acacia"],
-                    image: "https://upload.wikimedia.org/wikipedia/commons/5/5c/Robinia_pseudoacacia.jpg"
+                    common: ["Black Locust", "False Acacia"]
                 },
                 {
                     botanical: "Cercis canadensis",
-                    common: ["Eastern Redbud", "Judas Tree"],
-                    image: "https://upload.wikimedia.org/wikipedia/commons/9/97/Cercis_canadensis.jpg"
+                    common: ["Eastern Redbud", "Judas Tree"]
                 }
             ]
         };
@@ -147,8 +132,6 @@
             const question = questions[currentQuestionIndex];
             document.getElementById("result").textContent = "";
             document.getElementById("next-btn").style.display = "none";
-            document.getElementById("tree-image").src = question.image;
-            document.getElementById("tree-image").alt = question.common[0];
 
             if (selectedMode === "typing") {
                 document.getElementById("question").textContent = `What is the botanical name for '${question.common[0]}'?`;
@@ -220,4 +203,12 @@
             return otherChoices
                 .sort(() => Math.random() - 0.5)
                 .slice(0, numChoices)
-                .map(tree => tree
+                .map(tree => tree.botanical);
+        }
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+    </script>
+</body>
+</html>
