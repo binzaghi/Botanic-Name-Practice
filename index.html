@@ -57,6 +57,12 @@
     <p style="font-size: 22px;">Choose your mode:</p>
     <button onclick="startTypingPractice()">Typing Mode</button>
     <button onclick="startMultipleChoice()">Multiple Choice Mode</button>
+    <p style="font-size: 22px; margin-top: 20px;">Select Group(s):</p>
+    <div id="group-selection">
+        <label><input type="checkbox" value="Group 1" checked> Group 1</label>
+        <label><input type="checkbox" value="Group 2" checked> Group 2</label>
+    </div>
+    <button onclick="startPractice()" style="margin-top: 10px;">Start Practice</button>
     <div id="practice-area" style="display: none;">
         <p id="question" class="question"></p>
         <div id="options" class="options"></div>
@@ -70,7 +76,7 @@
             "Group 1": [
                 {
                     botanical: "Betula pendula",
-                    common: ["European White Birch", "Silver Birch", ]
+                    common: [ "European White Birch"]
                 },
                 {
                     botanical: "Betula papyrifera",
@@ -109,23 +115,28 @@
         let questions = [];
         let currentQuestionIndex = 0;
 
+        function startPractice() {
+            const selectedGroups = Array.from(document.querySelectorAll('#group-selection input:checked'))
+                .map(input => input.value);
+
+            if (selectedGroups.length === 0) {
+                alert("Please select at least one group.");
+                return;
+            }
+
+            questions = selectedGroups.flatMap(group => treeGroups[group]);
+            questions = questions.sort(() => Math.random() - 0.5); // Shuffle questions
+            currentQuestionIndex = 0;
+            document.getElementById("practice-area").style.display = "block";
+            showQuestion();
+        }
+
         function startTypingPractice() {
             selectedMode = "typing";
-            initializeQuestions();
-            showQuestion();
         }
 
         function startMultipleChoice() {
             selectedMode = "multiple-choice";
-            initializeQuestions();
-            showQuestion();
-        }
-
-        function initializeQuestions() {
-            questions = Object.values(treeGroups).flat();
-            questions = questions.sort(() => Math.random() - 0.5); // Shuffle questions
-            currentQuestionIndex = 0;
-            document.getElementById("practice-area").style.display = "block";
         }
 
         function showQuestion() {
