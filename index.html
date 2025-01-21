@@ -21,6 +21,22 @@
             font-size: 16px;
             font-weight: bold;
         }
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border: 2px solid #007BFF;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #next-btn {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -34,7 +50,7 @@
         <input type="text" id="answer" style="display: none;" placeholder="Type your answer here">
         <button id="submit-btn" style="display: none;" onclick="checkTypingAnswer()">Submit</button>
         <p id="result" class="result"></p>
-        <button id="next-btn" style="display: none;" onclick="nextQuestion()">Next</button>
+        <button id="next-btn" onclick="nextQuestion()">Next</button>
     </div>
     <script>
         const treeGroups = {
