@@ -67,16 +67,48 @@
     <script>
         const treeGroups = {
             "Group 1": [
-                { botanical: "Betula pendula", common: "Silver Birch", image: "https://example.com/silver_birch.jpg" },
-                { botanical: "Betula papyrifera", common: "Paper Birch", image: "https://example.com/paper_birch.jpg" },
-                { botanical: "Betula alleghaniensis", common: "Yellow Birch", image: "https://example.com/yellow_birch.jpg" },
-                { botanical: "Betula nigra", common: "River Birch", image: "https://example.com/river_birch.jpg" }
+                {
+                    botanical: "Betula pendula",
+                    common: ["Silver Birch", "European White Birch"],
+                    image: "https://upload.wikimedia.org/wikipedia/commons/e/e8/Betula_pendula_001.jpg"
+                },
+                {
+                    botanical: "Betula papyrifera",
+                    common: ["Paper Birch", "Canoe Birch", "White Birch"],
+                    image: "https://upload.wikimedia.org/wikipedia/commons/8/8e/Betula_papyrifera.jpg"
+                },
+                {
+                    botanical: "Betula alleghaniensis",
+                    common: ["Yellow Birch", "Golden Birch"],
+                    image: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Betula_alleghaniensis.jpg"
+                },
+                {
+                    botanical: "Betula nigra",
+                    common: ["River Birch", "Black Birch", "Water Birch"],
+                    image: "https://upload.wikimedia.org/wikipedia/commons/5/55/Betula_nigra.jpg"
+                }
             ],
             "Group 2": [
-                { botanical: "Gleditsia triacanthos", common: "Honey Locust", image: "https://example.com/honey_locust.jpg" },
-                { botanical: "Gymnocladus dioicus", common: "Kentucky Coffeetree", image: "https://example.com/kentucky_coffeetree.jpg" },
-                { botanical: "Robinia pseudoacacia", common: "Black Locust", image: "https://example.com/black_locust.jpg" },
-                { botanical: "Cercis canadensis", common: "Eastern Redbud", image: "https://example.com/eastern_redbud.jpg" }
+                {
+                    botanical: "Gleditsia triacanthos",
+                    common: ["Honey Locust", "Sweet Locust", "Thorny Locust"],
+                    image: "https://upload.wikimedia.org/wikipedia/commons/b/b0/Gleditsia_triacanthos.jpg"
+                },
+                {
+                    botanical: "Gymnocladus dioicus",
+                    common: ["Kentucky Coffeetree", "American Coffee Tree"],
+                    image: "https://upload.wikimedia.org/wikipedia/commons/a/ae/Gymnocladus_dioicus.jpg"
+                },
+                {
+                    botanical: "Robinia pseudoacacia",
+                    common: ["Black Locust", "False Acacia"],
+                    image: "https://upload.wikimedia.org/wikipedia/commons/5/5c/Robinia_pseudoacacia.jpg"
+                },
+                {
+                    botanical: "Cercis canadensis",
+                    common: ["Eastern Redbud", "Judas Tree"],
+                    image: "https://upload.wikimedia.org/wikipedia/commons/9/97/Cercis_canadensis.jpg"
+                }
             ]
         };
 
@@ -108,15 +140,15 @@
             document.getElementById("result").textContent = "";
             document.getElementById("next-btn").style.display = "none";
             document.getElementById("tree-image").src = question.image;
-            document.getElementById("tree-image").alt = question.common;
+            document.getElementById("tree-image").alt = question.common[0];
 
             if (selectedMode === "typing") {
-                document.getElementById("question").textContent = `What is the botanical name for '${question.common}'?`;
+                document.getElementById("question").textContent = `What is the botanical name for '${question.common[0]}'?`;
                 document.getElementById("answer").style.display = "block";
                 document.getElementById("submit-btn").style.display = "block";
                 document.getElementById("options").style.display = "none";
             } else if (selectedMode === "multiple-choice") {
-                document.getElementById("question").textContent = `What is the botanical name for '${question.common}'?`;
+                document.getElementById("question").textContent = `What is the botanical name for '${question.common[0]}'?`;
                 const optionsDiv = document.getElementById("options");
                 optionsDiv.innerHTML = ""; // Clear previous options
                 const correctAnswer = question.botanical;
