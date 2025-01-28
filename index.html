@@ -42,13 +42,21 @@
             font-size: 22px;
             font-weight: bold;
         }
-        #answer {
+        #height, #width {
             font-size: 18px;
-            padding: 10px;
-            width: 100%;
+            padding: 5px;
+            width: 80px;
             box-sizing: border-box;
             border: 2px solid #228B22;
             border-radius: 5px;
+            text-align: center;
+        }
+        .height-width-container {
+            font-size: 22px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .images {
             display: flex;
@@ -61,6 +69,11 @@
             margin: 5px;
             border: 2px solid #ddd;
             border-radius: 5px;
+        }
+        .info-message {
+            font-size: 14px;
+            color: gray;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -77,11 +90,21 @@
         <label><input type="checkbox" value="Group 7"> Group 7</label>
     </div>
     <button onclick="confirmGroups()" style="margin-top: 10px;">Confirm Groups</button>
-    <button onclick="resetPractice()" style="margin-top: 10px; background-color: #FF6347; border-color: #FF4500;">Reset</button>
+    <button onclick="resetPractice()" style="margin-top: 10px; background-color: #FF6347; border-color: #FF4500;">Reset Groups</button>
     <div id="practice-area" style="display: none;">
-        <div id="image-container" class="images"></div>
         <p id="question" class="question"></p>
+        <div id="image-container" class="images"></div>
+        <p id="image-info" class="info-message" style="display: none;">No photos available for this tree yet.</p>
         <div id="options" class="options"></div>
+        <div class="height-width-container">
+            <label for="height">Height: </label>
+            <input type="number" id="height" placeholder="0"> ft
+            <label for="width">Width: </label>
+            <input type="number" id="width" placeholder="0"> ft
+            <button onclick="checkHeightWidth()">Check</button>
+        </div>
+        <p id="height-width-info" class="info-message" style="display: none;">Height and width information not available for this tree.</p>
+        <p id="height-width-result" class="result"></p>
         <input type="text" id="answer" style="display: none;" placeholder="Type your answer here">
         <button id="submit-btn" style="display: none;" onclick="checkTypingAnswer()">Submit</button>
         <p id="result" class="result"></p>
@@ -90,14 +113,14 @@
     <script>
         const treeGroups = {
             "Group 1": [
-                { botanical: "Betula pendula", common: ["European White Birch"] },
-                { botanical: "Betula papyrifera", common: ["Paper Birch", "Canoe Birch"] },
-                { botanical: "Betula alleghaniensis", common: ["Yellow Birch"] },
-                { botanical: "Betula nigra", common: ["River Birch"] },
-                { botanical: "Alnus glutinosa", common: ["European Alder", "Black Alder"] },
-                { botanical: "Carpinus caroliniana", common: ["Blue Beech", "American Hornbeam"] },
-                { botanical: "Ostrya virginiana", common: ["Ironwood", "Eastern Hophornbeam"] },
-                { botanical: "Corylus colurna", common: ["Turkish Hazel"] }
+                { botanical: "Betula pendula", common: ["European White Birch"], height: "40", width: "20" },
+                { botanical: "Betula papyrifera", common: ["Paper Birch", "Canoe Birch"], height: "50", width: "30" },
+                { botanical: "Betula alleghaniensis", common: ["Yellow Birch"], height: "60", width: "20" },
+                { botanical: "Betula nigra", common: ["River Birch"], height: "50", width: "30" },
+                { botanical: "Alnus glutinosa", common: ["European Alder", "Black Alder"], height: "40", width: "20" },
+                { botanical: "Carpinus caroliniana", common: ["Blue Beech", "American Hornbeam"], height: "15", width: "15" },
+                { botanical: "Corylus colurna", common: ["Turkish Hazel"], height: "50", width: "30" },
+                { botanical: "Ostrya virginiana", common: ["Ironwood", "Eastern Hophornbeam"], height: "20", width: "15" }
             ],
             "Group 2": [
                 { botanical: "Gleditsia triacanthos", common: ["Honey Locust"] },
@@ -107,12 +130,56 @@
                 { botanical: "Celtis occidentalis", common: ["Hackberry"] },
                 { botanical: "Ginkgo biloba", common: ["Ginkgo"] },
                 { botanical: "Ailanthus altissima", common: ["Tree of Heaven"] }
+            ],
+            "Group 3": [
+                { botanical: "Platanus occidentalis", common: ["American Sycamore"] },
+                { botanical: "Platanus x acerifolia", common: ["London Plane"] },
+                { botanical: "Tilia cordata", common: ["Littleleaf Linden"] },
+                { botanical: "Tilia americana", common: ["American Linden"] },
+                { botanical: "Liriodendron tulipifera", common: ["Tulip Tree"] },
+                { botanical: "Magnolia acuminata", common: ["Cucumber Tree"] },
+                { botanical: "Liquidambar styraciflua", common: ["Sweetgum"] }
+            ],
+            "Group 4": [
+                { botanical: "Amelanchier arborea", common: ["Downy Serviceberry"] },
+                { botanical: "Crataegus spp.", common: ["Hawthorn"] },
+                { botanical: "Malus spp.", common: ["Apple"] },
+                { botanical: "Prunus pensylvanica", common: ["Pin Cherry"] },
+                { botanical: "Prunus serotina", common: ["Black Cherry"] },
+                { botanical: "Prunus virginiana", common: ["Chokecherry"] },
+                { botanical: "Pyrus calleryana 'Chanticleer'", common: ["Chanticleer Pear"] },
+                { botanical: "Sorbus americana", common: ["American Mountain Ash"] },
+                { botanical: "Sorbus aucuparia", common: ["European Mountain Ash"] }
+            ],
+            "Group 5": [
+                { botanical: "Aralia elata", common: ["Japanese Angelica Tree"] },
+                { botanical: "Rhamnus cathartica", common: ["Common Buckthorn"] },
+                { botanical: "Rhus typhina", common: ["Staghorn Sumac"] },
+                { botanical: "Nyssa sylvatica", common: ["Black Gum"] },
+                { botanical: "Morus alba", common: ["White Mulberry"] },
+                { botanical: "Morus rubra", common: ["Red Mulberry"] }
+            ],
+            "Group 6": [
+                { botanical: "Populus alba", common: ["White Poplar"] },
+                { botanical: "Populus balsamifera", common: ["Balsam Poplar"] },
+                { botanical: "Populus grandidentata", common: ["Bigtooth Aspen"] },
+                { botanical: "Populus tremuloides", common: ["Quaking Aspen"] },
+                { botanical: "Populus nigra 'Italica'", common: ["Lombardy Poplar"] },
+                { botanical: "Salix alba 'Tristis'", common: ["Golden Weeping Willow"] },
+                { botanical: "Salix fragilis", common: ["Crack Willow"] },
+                { botanical: "Salix nigra", common: ["Black Willow"] }
+            ],
+            "Group 7": [
+                { botanical: "Ulmus americana", common: ["American Elm"] },
+                { botanical: "Ulmus glabra", common: ["Wych Elm"] },
+                { botanical: "Ulmus procera", common: ["English Elm"] },
+                { botanical: "Ulmus rubra", common: ["Slippery Elm"] },
+                { botanical: "Ulmus pumila", common: ["Siberian Elm"] }
             ]
         };
 
-        const imagePath = "images/"; // Folder where images are stored
+        const imagePath = "images/";
 
-        let selectedMode = "";
         let selectedGroups = [];
         let questions = [];
         let currentQuestionIndex = 0;
@@ -127,7 +194,7 @@
             }
 
             questions = selectedGroups.flatMap(group => treeGroups[group]);
-            questions = questions.sort(() => Math.random() - 0.5); // Shuffle questions
+            questions = questions.sort(() => Math.random() - 0.5);
 
             document.getElementById("practice-area").style.display = "block";
             currentQuestionIndex = 0;
@@ -143,72 +210,65 @@
         function showQuestion() {
             const question = questions[currentQuestionIndex];
             document.getElementById("result").textContent = "";
+            document.getElementById("height-width-result").textContent = "";
             document.getElementById("next-btn").style.display = "none";
             document.getElementById("image-container").innerHTML = "";
 
-            // Load images
             const imagesDiv = document.getElementById("image-container");
             const botanicalName = question.botanical.replace(/ /g, "_");
 
-            for (let i = 1; i <= 5; i++) { // Check for up to 5 images
+            let hasImage = false;
+            for (let i = 1; i <= 5; i++) {
                 const imageUrl = `${imagePath}${botanicalName}_${i}.jpg`;
                 const img = new Image();
                 img.src = imageUrl;
                 img.alt = botanicalName;
-                img.onerror = () => img.remove(); // Remove image if it doesn't exist
+                img.onload = () => { hasImage = true; };
+                img.onerror = () => img.remove();
                 imagesDiv.appendChild(img);
             }
 
-            // Display question
+            document.getElementById("image-info").style.display = hasImage ? "none" : "block";
+
             document.getElementById("question").textContent = `What is the botanical name for '${question.common.join(", ")}'?`;
 
-            if (selectedMode === "typing") {
-                document.getElementById("answer").style.display = "block";
-                document.getElementById("submit-btn").style.display = "block";
-                document.getElementById("options").style.display = "none";
-            } else {
-                const optionsDiv = document.getElementById("options");
-                optionsDiv.innerHTML = ""; // Clear previous options
-                const correctAnswer = question.botanical;
-                const choices = shuffle([
-                    ...getRandomChoices(question.botanical, 3),
-                    correctAnswer
-                ]);
-
-                choices.forEach(choice => {
-                    const button = document.createElement("button");
-                    button.textContent = choice;
-                    button.onclick = () => checkMultipleChoiceAnswer(choice, correctAnswer);
-                    optionsDiv.appendChild(button);
-                });
-
-                document.getElementById("answer").style.display = "none";
-                document.getElementById("submit-btn").style.display = "none";
-                optionsDiv.style.display = "block";
-            }
+            const heightWidthInfo = !question.height || !question.width;
+            document.getElementById("height-width-info").style.display = heightWidthInfo ? "block" : "none";
         }
 
-        function checkTypingAnswer() {
+        function checkHeightWidth() {
+    const question = questions[currentQuestionIndex];
+    const userHeight = document.getElementById("height").value.trim();
+    const userWidth = document.getElementById("width").value.trim();
+    const resultDiv = document.getElementById("height-width-result");
+
+    let feedback = "";
+
+    if (userHeight === question.height) {
+        feedback += "Height is correct! ";
+    } else {
+        feedback += `Height is incorrect. Correct height is ${question.height} ft. `;
+    }
+
+    if (userWidth === question.width) {
+        feedback += "Width is correct!";
+    } else {
+        feedback += `Width is incorrect. Correct width is ${question.width} ft.`;
+    }
+
+    resultDiv.textContent = feedback;
+    resultDiv.style.color = feedback.includes("incorrect") ? "red" : "green";
+}
+       function checkTypingAnswer() {
             const question = questions[currentQuestionIndex];
             const userAnswer = document.getElementById("answer").value.trim();
             const resultDiv = document.getElementById("result");
+
             if (userAnswer.toLowerCase() === question.botanical.toLowerCase()) {
                 resultDiv.textContent = "Correct!";
                 resultDiv.style.color = "green";
             } else {
                 resultDiv.textContent = `Oops! The correct answer is '${question.botanical}'.`;
-                resultDiv.style.color = "red";
-            }
-            document.getElementById("next-btn").style.display = "block";
-        }
-
-        function checkMultipleChoiceAnswer(choice, correctAnswer) {
-            const resultDiv = document.getElementById("result");
-            if (choice === correctAnswer) {
-                resultDiv.textContent = "Correct!";
-                resultDiv.style.color = "green";
-            } else {
-                resultDiv.textContent = `Oops! The correct answer is '${correctAnswer}'.`;
                 resultDiv.style.color = "red";
             }
             document.getElementById("next-btn").style.display = "block";
@@ -221,22 +281,10 @@
             } else {
                 alert("You have completed the practice!");
                 document.getElementById("practice-area").style.display = "none";
-                resetPractice();
+                location.reload();
             }
-        }
-
-        function getRandomChoices(correctAnswer, numChoices) {
-            const group = Object.values(treeGroups).flat();
-            const otherChoices = group.filter(tree => tree.botanical !== correctAnswer);
-            return otherChoices
-                .sort(() => Math.random() - 0.5)
-                .slice(0, numChoices)
-                .map(tree => tree.botanical);
-        }
-
-        function shuffle(array) {
-            return array.sort(() => Math.random() - 0.5);
         }
     </script>
 </body>
 </html>
+
