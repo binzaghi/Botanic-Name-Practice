@@ -208,68 +208,70 @@
         }
 
         function showQuestion() {
-            const question = questions[currentQuestionIndex];
-            document.getElementById("result").textContent = "";
-            document.getElementById("height-width-result").textContent = "";
-            document.getElementById("next-btn").style.display = "none";
-            document.getElementById("image-container").innerHTML = "";
+    const question = questions[currentQuestionIndex];
+    document.getElementById("result").textContent = "";
+    document.getElementById("height-width-result").textContent = "";
+    document.getElementById("next-btn").style.display = "none";
+    document.getElementById("image-container").innerHTML = "";
 
-            const imagesDiv = document.getElementById("image-container");
-            const botanicalName = question.botanical.replace(/ /g, "_");
+    const imagesDiv = document.getElementById("image-container");
+    const botanicalName = question.botanical.replace(/ /g, "_");
 
-            let hasImage = false;
-            for (let i = 1; i <= 5; i++) {
-                const imageUrl = `${imagePath}${botanicalName}_${i}.jpg`;
-                const img = new Image();
-                img.src = imageUrl;
-                img.alt = botanicalName;
-                img.onload = () => { hasImage = true; };
-                img.onerror = () => img.remove();
-                imagesDiv.appendChild(img);
-            }
+    let hasImage = false;
+    for (let i = 1; i <= 5; i++) {
+        const imageUrl = `${imagePath}${botanicalName}_${i}.jpg`;
+        const img = new Image();
+        img.src = imageUrl;
+        img.alt = botanicalName;
+        img.onload = () => { hasImage = true; };
+        img.onerror = () => img.remove();
+        imagesDiv.appendChild(img);
+    }
 
-            document.getElementById("image-info").style.display = hasImage ? "none" : "block";
+    document.getElementById("image-info").style.display = hasImage ? "none" : "block";
 
-            if (hasImage) {
-                document.getElementById("question").textContent = "What is this tree's name?";
+    if (hasImage) {
+        // Question for trees with photos
+        document.getElementById("question").textContent = "What is the name of the tree shown below?";
 
-                const optionsDiv = document.getElementById("options");
-                optionsDiv.innerHTML = ""; // Clear previous options
-                const correctAnswer =
-                question.botanical + ", " + question.common.join(", ");
-                const choices = shuffle([
-                    ...getRandomChoices(question.botanical, 3),
-                    correctAnswer
-                ]);
+        const optionsDiv = document.getElementById("options");
+        optionsDiv.innerHTML = ""; // Clear previous options
+        const correctAnswer =
+            question.botanical + ", " + question.common.join(", ");
+        const choices = shuffle([
+            ...getRandomChoices(question.botanical, 3),
+            correctAnswer
+        ]);
 
-                choices.forEach(choice => {
-                    const button = document.createElement("button");
-                    button.textContent = choice;
-                    button.onclick = () => checkMultipleChoiceAnswer(choice, correctAnswer);
-                    optionsDiv.appendChild(button);
-                });
-            } else {
-                document.getElementById("question").textContent = `What is the botanical name for '${question.common.join(", ")}'?`;
+        choices.forEach(choice => {
+            const button = document.createElement("button");
+            button.textContent = choice;
+            button.onclick = () => checkMultipleChoiceAnswer(choice, correctAnswer);
+            optionsDiv.appendChild(button);
+        });
+    } else {
+        // Question for trees without photos
+        document.getElementById("question").textContent = `What is the botanical name for '${question.common.join(", ")}'?`;
 
-                const optionsDiv = document.getElementById("options");
-                optionsDiv.innerHTML = ""; // Clear previous options
-                const correctAnswer = question.botanical;
-                const choices = shuffle([
-                    ...getRandomChoices(question.botanical, 3),
-                    correctAnswer
-                ]);
+        const optionsDiv = document.getElementById("options");
+        optionsDiv.innerHTML = ""; // Clear previous options
+        const correctAnswer = question.botanical;
+        const choices = shuffle([
+            ...getRandomChoices(question.botanical, 3),
+            correctAnswer
+        ]);
 
-                choices.forEach(choice => {
-                    const button = document.createElement("button");
-                    button.textContent = choice;
-                    button.onclick = () => checkMultipleChoiceAnswer(choice, correctAnswer);
-                    optionsDiv.appendChild(button);
-                });
-            }
+        choices.forEach(choice => {
+            const button = document.createElement("button");
+            button.textContent = choice;
+            button.onclick = () => checkMultipleChoiceAnswer(choice, correctAnswer);
+            optionsDiv.appendChild(button);
+        });
+    }
 
-            const heightWidthInfo = !question.height || !question.width;
-            document.getElementById("height-width-info").style.display = heightWidthInfo ? "block" : "none";
-        }
+    const heightWidthInfo = !question.height || !question.width;
+    document.getElementById("height-width-info").style.display = heightWidthInfo ? "block" : "none";
+}
 
         function checkHeightWidth() {
             const question = questions[currentQuestionIndex];
