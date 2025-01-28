@@ -77,17 +77,13 @@
         <label><input type="checkbox" value="Group 7"> Group 7</label>
     </div>
     <button onclick="confirmGroups()" style="margin-top: 10px;">Confirm Groups</button>
-    <div id="mode-selection" style="display: none; margin-top: 20px;">
-        <p style="font-size: 22px;">Choose your mode:</p>
-        <button onclick="startTypingPractice()">Typing Mode</button>
-        <button onclick="startMultipleChoice()">Multiple Choice Mode</button>
-    </div>
+    <button onclick="resetPractice()" style="margin-top: 10px; background-color: #FF6347; border-color: #FF4500;">Reset</button>
     <div id="practice-area" style="display: none;">
+        <div id="image-container" class="images"></div>
         <p id="question" class="question"></p>
         <div id="options" class="options"></div>
         <input type="text" id="answer" style="display: none;" placeholder="Type your answer here">
         <button id="submit-btn" style="display: none;" onclick="checkTypingAnswer()">Submit</button>
-        <div id="image-container" class="images"></div>
         <p id="result" class="result"></p>
         <button id="next-btn" onclick="nextQuestion()">Next</button>
     </div>
@@ -95,12 +91,12 @@
         const treeGroups = {
             "Group 1": [
                 { botanical: "Betula pendula", common: ["European White Birch"] },
-                { botanical: "Betula papyrifera", common: ["Paper Birch","Canoe Birth"] },
+                { botanical: "Betula papyrifera", common: ["Paper Birch", "Canoe Birch"] },
                 { botanical: "Betula alleghaniensis", common: ["Yellow Birch"] },
                 { botanical: "Betula nigra", common: ["River Birch"] },
-                { botanical: "Alnus glutinosa", common: ["European Alder","Black Alder"] },
-                { botanical: "Carpinus caroliniana", common: ["Blue Beech","American Hornbeam"] },
-                { botanical: "Ostrya virginiana", common: ["Ironwood","Eastern Hophornbeam"] },
+                { botanical: "Alnus glutinosa", common: ["European Alder", "Black Alder"] },
+                { botanical: "Carpinus caroliniana", common: ["Blue Beech", "American Hornbeam"] },
+                { botanical: "Ostrya virginiana", common: ["Ironwood", "Eastern Hophornbeam"] },
                 { botanical: "Corylus colurna", common: ["Turkish Hazel"] }
             ],
             "Group 2": [
@@ -111,51 +107,6 @@
                 { botanical: "Celtis occidentalis", common: ["Hackberry"] },
                 { botanical: "Ginkgo biloba", common: ["Ginkgo"] },
                 { botanical: "Ailanthus altissima", common: ["Tree of Heaven"] }
-            ],
-            "Group 3": [
-                { botanical: "Platanus occidentalis", common: ["American Sycamore"] },
-                { botanical: "Platanus x acerifolia", common: ["London Plane"] },
-                { botanical: "Tilia cordata", common: ["Littleleaf Linden"] },
-                { botanical: "Tilia americana", common: ["American Linden"] },
-                { botanical: "Liriodendron tulipifera", common: ["Tulip Tree"] },
-                { botanical: "Magnolia acuminata", common: ["Cucumber Tree"] },
-                { botanical: "Liquidambar styraciflua", common: ["Sweetgum"] }
-            ],
-            "Group 4": [
-                { botanical: "Amelanchier arborea", common: ["Downy Serviceberry"] },
-                { botanical: "Crataegus spp.", common: ["Hawthorn"] },
-                { botanical: "Malus spp.", common: ["Apple"] },
-                { botanical: "Prunus pensylvanica", common: ["Pin Cherry"] },
-                { botanical: "Prunus serotina", common: ["Black Cherry"] },
-                { botanical: "Prunus virginiana", common: ["Chokecherry"] },
-                { botanical: "Pyrus calleryana 'Chanticleer'", common: ["Chanticleer Pear"] },
-                { botanical: "Sorbus americana", common: ["American Mountain Ash"] },
-                { botanical: "Sorbus aucuparia", common: ["European Mountain Ash"] }
-            ],
-            "Group 5": [
-                { botanical: "Aralia elata", common: ["Japanese Angelica Tree"] },
-                { botanical: "Rhamnus cathartica", common: ["Common Buckthorn"] },
-                { botanical: "Rhus typhina", common: ["Staghorn Sumac"] },
-                { botanical: "Nyssa sylvatica", common: ["Black Gum"] },
-                { botanical: "Morus alba", common: ["White Mulberry"] },
-                { botanical: "Morus rubra", common: ["Red Mulberry"] }
-            ],
-            "Group 6": [
-                { botanical: "Populus alba", common: ["White Poplar"] },
-                { botanical: "Populus balsamifera", common: ["Balsam Poplar"] },
-                { botanical: "Populus grandidentata", common: ["Bigtooth Aspen"] },
-                { botanical: "Populus tremuloides", common: ["Quaking Aspen"] },
-                { botanical: "Populus nigra 'Italica'", common: ["Lombardy Poplar"] },
-                { botanical: "Salix alba 'Tristis'", common: ["Golden Weeping Willow"] },
-                { botanical: "Salix fragilis", common: ["Crack Willow"] },
-                { botanical: "Salix nigra", common: ["Black Willow"] }
-            ],
-            "Group 7": [
-                { botanical: "Ulmus americana", common: ["American Elm"] },
-                { botanical: "Ulmus glabra", common: ["Wych Elm"] },
-                { botanical: "Ulmus procera", common: ["English Elm"] },
-                { botanical: "Ulmus rubra", common: ["Slippery Elm"] },
-                { botanical: "Ulmus pumila", common: ["Siberian Elm"] }
             ]
         };
 
@@ -175,28 +126,18 @@
                 return;
             }
 
-            document.getElementById("group-selection").style.display = "none";
-            document.querySelector("button[onclick='confirmGroups()']").style.display = "none";
-            document.getElementById("mode-selection").style.display = "block";
-        }
-
-        function startTypingPractice() {
-            selectedMode = "typing";
-            startPractice();
-        }
-
-        function startMultipleChoice() {
-            selectedMode = "multiple-choice";
-            startPractice();
-        }
-
-        function startPractice() {
             questions = selectedGroups.flatMap(group => treeGroups[group]);
             questions = questions.sort(() => Math.random() - 0.5); // Shuffle questions
-            currentQuestionIndex = 0;
-            document.getElementById("mode-selection").style.display = "none";
+
             document.getElementById("practice-area").style.display = "block";
+            currentQuestionIndex = 0;
             showQuestion();
+        }
+
+        function resetPractice() {
+            document.getElementById("practice-area").style.display = "none";
+            document.querySelectorAll('#group-selection input').forEach(input => input.checked = false);
+            selectedGroups = [];
         }
 
         function showQuestion() {
@@ -205,13 +146,27 @@
             document.getElementById("next-btn").style.display = "none";
             document.getElementById("image-container").innerHTML = "";
 
+            // Load images
+            const imagesDiv = document.getElementById("image-container");
+            const botanicalName = question.botanical.replace(/ /g, "_");
+
+            for (let i = 1; i <= 5; i++) { // Check for up to 5 images
+                const imageUrl = `${imagePath}${botanicalName}_${i}.jpg`;
+                const img = new Image();
+                img.src = imageUrl;
+                img.alt = botanicalName;
+                img.onerror = () => img.remove(); // Remove image if it doesn't exist
+                imagesDiv.appendChild(img);
+            }
+
+            // Display question
+            document.getElementById("question").textContent = `What is the botanical name for '${question.common.join(", ")}'?`;
+
             if (selectedMode === "typing") {
-                document.getElementById("question").textContent = `What is the botanical name for '${question.common.join(",")}'?`;
                 document.getElementById("answer").style.display = "block";
                 document.getElementById("submit-btn").style.display = "block";
                 document.getElementById("options").style.display = "none";
-            } else if (selectedMode === "multiple-choice") {
-                document.getElementById("question").textContent = `What is the botanical name for '${question.common[0]}'?`;
+            } else {
                 const optionsDiv = document.getElementById("options");
                 optionsDiv.innerHTML = ""; // Clear previous options
                 const correctAnswer = question.botanical;
@@ -230,19 +185,6 @@
                 document.getElementById("answer").style.display = "none";
                 document.getElementById("submit-btn").style.display = "none";
                 optionsDiv.style.display = "block";
-            }
-
-            // Load images
-            const imagesDiv = document.getElementById("image-container");
-            const botanicalName = question.botanical.replace(/ /g, "_");
-
-            for (let i = 1; i <= 5; i++) { // Check for up to 5 images
-                const imageUrl = `${imagePath}${botanicalName}_${i}.jpg`;
-                const img = new Image();
-                img.src = imageUrl;
-                img.alt = botanicalName;
-                img.onerror = () => img.remove(); // Remove image if it doesn't exist
-                imagesDiv.appendChild(img);
             }
         }
 
@@ -279,7 +221,7 @@
             } else {
                 alert("You have completed the practice!");
                 document.getElementById("practice-area").style.display = "none";
-                location.reload();
+                resetPractice();
             }
         }
 
