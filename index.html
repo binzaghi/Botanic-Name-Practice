@@ -50,6 +50,18 @@
             border: 2px solid #228B22;
             border-radius: 5px;
         }
+        .images {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .images img {
+            max-width: 200px;
+            max-height: 200px;
+            margin: 5px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -75,6 +87,7 @@
         <div id="options" class="options"></div>
         <input type="text" id="answer" style="display: none;" placeholder="Type your answer here">
         <button id="submit-btn" style="display: none;" onclick="checkTypingAnswer()">Submit</button>
+        <div id="image-container" class="images"></div>
         <p id="result" class="result"></p>
         <button id="next-btn" onclick="nextQuestion()">Next</button>
     </div>
@@ -146,6 +159,8 @@
             ]
         };
 
+        const imagePath = "images/"; // Folder where images are stored
+
         let selectedMode = "";
         let selectedGroups = [];
         let questions = [];
@@ -188,6 +203,7 @@
             const question = questions[currentQuestionIndex];
             document.getElementById("result").textContent = "";
             document.getElementById("next-btn").style.display = "none";
+            document.getElementById("image-container").innerHTML = "";
 
             if (selectedMode === "typing") {
                 document.getElementById("question").textContent = `What is the botanical name for '${question.common[0]}'?`;
@@ -204,7 +220,7 @@
                     correctAnswer
                 ]);
 
-                choices.forEach((choice, index) => {
+                choices.forEach(choice => {
                     const button = document.createElement("button");
                     button.textContent = choice;
                     button.onclick = () => checkMultipleChoiceAnswer(choice, correctAnswer);
@@ -214,6 +230,19 @@
                 document.getElementById("answer").style.display = "none";
                 document.getElementById("submit-btn").style.display = "none";
                 optionsDiv.style.display = "block";
+            }
+
+            // Load images
+            const imagesDiv = document.getElementById("image-container");
+            const botanicalName = question.botanical.replace(/ /g, "_");
+
+            for (let i = 1; i <= 5; i++) { // Check for up to 5 images
+                const imageUrl = `${imagePath}${botanicalName}_${i}.jpg`;
+                const img = new Image();
+                img.src = imageUrl;
+                img.alt = botanicalName;
+                img.onerror = () => img.remove(); // Remove image if it doesn't exist
+                imagesDiv.appendChild(img);
             }
         }
 
