@@ -231,7 +231,7 @@
     document.getElementById("image-info").style.display = hasImage ? "none" : "block";
 
     if (hasImage) {
-        // Question for trees with photos
+        // For trees with photos: Show "What is the name of the tree shown below?"
         document.getElementById("question").textContent = "What is the name of the tree shown below?";
 
         const optionsDiv = document.getElementById("options");
@@ -239,7 +239,7 @@
         const correctAnswer =
             question.botanical + ", " + question.common.join(", ");
         const choices = shuffle([
-            ...getRandomChoices(question.botanical, 3),
+            ...getRandomChoices(question.botanical, 3, true),
             correctAnswer
         ]);
 
@@ -250,20 +250,20 @@
             optionsDiv.appendChild(button);
         });
     } else {
-        // Question for trees without photos
+        // For trees without photos: Ask "What is the botanical name for 'Common Name'?"
         document.getElementById("question").textContent = `What is the botanical name for '${question.common.join(", ")}'?`;
 
         const optionsDiv = document.getElementById("options");
         optionsDiv.innerHTML = ""; // Clear previous options
         const correctAnswer = question.botanical;
         const choices = shuffle([
-            ...getRandomChoices(question.botanical, 3),
+            ...getRandomChoices(question.botanical, 3, false),
             correctAnswer
         ]);
 
         choices.forEach(choice => {
             const button = document.createElement("button");
-            button.textContent = choice;
+            button.textContent = choice; // Only show botanical names for no-photo questions
             button.onclick = () => checkMultipleChoiceAnswer(choice, correctAnswer);
             optionsDiv.appendChild(button);
         });
@@ -335,14 +335,19 @@
             }
         }
 
-        function getRandomChoices(correctAnswer, numChoices) {
-            const group = Object.values(treeGroups).flat();
-            const otherChoices = group.filter(tree => tree.botanical !== correctAnswer);
-            return otherChoices
-                .sort(() => Math.random() - 0.5)
-                .slice(0, numChoices)
-                .map(tree => tree.botanical + ", " + tree.common.join(", "));
-        }
+        function getRandomChoices(correctAnswer, numChoices, includeCommon) {
+    const group = Object.values(treeGroups).flat();
+    const otherChoices = group.filter(tree => tree.botanical !== correctAnswer);
+    return otherChoices
+        .sort(() => Math.random() - 0.5)
+        .slice(0, numChoices)
+        .map(tree =>
+            includeCommon
+                ? tree.botanical + ", " + tree.common.join(", ")
+                : tree.botanical
+        );
+}
+
 
         function shuffle(array) {
             return array.sort(() => Math.random() - 0.5);
