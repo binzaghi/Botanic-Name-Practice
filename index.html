@@ -204,6 +204,7 @@
             questions = questions.sort(() => Math.random() - 0.5);
 
             document.getElementById("practice-area").style.display = "block";
+            moveIntroToBottom(); // Add this line to move the intro text
             currentQuestionIndex = 0;
             showQuestion();
         }
@@ -361,6 +362,12 @@
 
         function shuffle(array) {
             return array.sort(() => Math.random() - 0.5);
+        }
+        
+        function moveIntroToBottom() {
+            const intro = document.getElementById("intro");
+            const practiceArea = document.getElementById("practice-area");
+            practiceArea.appendChild(intro); // Moves the intro to the bottom of the practice area
         }
     </script>
 </body>
