@@ -98,9 +98,9 @@
         <div id="options" class="options"></div>
         <div class="height-width-container">
             <label for="height">Height: </label>
-            <input type="number" id="height" placeholder="0"> ft
+            <input type="text" id="height" placeholder="0"> ft
             <label for="width">Width: </label>
-            <input type="number" id="width" placeholder="0"> ft
+            <input type="text" id="width" placeholder="0"> ft
             <button onclick="checkHeightWidth()">Check</button>
         </div>
         <p id="height-width-info" class="info-message" style="display: none;">Height and width information not available for this tree.</p>
@@ -230,36 +230,84 @@
 
             document.getElementById("image-info").style.display = hasImage ? "none" : "block";
 
-            document.getElementById("question").textContent = `What is the botanical name for '${question.common.join(", ")}'?`;
+            if (hasImage) {
+                document.getElementById("question").textContent = "What is this tree's name?";
+
+                const optionsDiv = document.getElementById("options");
+                optionsDiv.innerHTML = ""; // Clear previous options
+                const correctAnswer =
+                question.botanical + ", " + question.common.join(", ");
+                const choices = shuffle([
+                    ...getRandomChoices(question.botanical, 3),
+                    correctAnswer
+                ]);
+
+                choices.forEach(choice => {
+                    const button = document.createElement("button");
+                    button.textContent = choice;
+                    button.onclick = () => checkMultipleChoiceAnswer(choice, correctAnswer);
+                    optionsDiv.appendChild(button);
+                });
+            } else {
+                document.getElementById("question").textContent = `What is the botanical name for '${question.common.join(", ")}'?`;
+
+                const optionsDiv = document.getElementById("options");
+                optionsDiv.innerHTML = ""; // Clear previous options
+                const correctAnswer = question.botanical;
+                const choices = shuffle([
+                    ...getRandomChoices(question.botanical, 3),
+                    correctAnswer
+                ]);
+
+                choices.forEach(choice => {
+                    const button = document.createElement("button");
+                    button.textContent = choice;
+                    button.onclick = () => checkMultipleChoiceAnswer(choice, correctAnswer);
+                    optionsDiv.appendChild(button);
+                });
+            }
 
             const heightWidthInfo = !question.height || !question.width;
             document.getElementById("height-width-info").style.display = heightWidthInfo ? "block" : "none";
         }
 
         function checkHeightWidth() {
-    const question = questions[currentQuestionIndex];
-    const userHeight = document.getElementById("height").value.trim();
-    const userWidth = document.getElementById("width").value.trim();
-    const resultDiv = document.getElementById("height-width-result");
+            const question = questions[currentQuestionIndex];
+            const userHeight = document.getElementById("height").value.trim();
+            const userWidth = document.getElementById("width").value.trim();
+            const resultDiv = document.getElementById("height-width-result");
 
-    let feedback = "";
+            let feedback = "";
 
-    if (userHeight === question.height) {
-        feedback += "Height is correct! ";
-    } else {
-        feedback += `Height is incorrect. Correct height is ${question.height} ft. `;
-    }
+            if (userHeight === question.height) {
+                feedback += "Height is correct! ";
+            } else {
+                feedback += `Height is incorrect. Correct height is ${question.height} ft. `;
+            }
 
-    if (userWidth === question.width) {
-        feedback += "Width is correct!";
-    } else {
-        feedback += `Width is incorrect. Correct width is ${question.width} ft.`;
-    }
+            if (userWidth === question.width) {
+                feedback += "Width is correct!";
+            } else {
+                feedback += `Width is incorrect. Correct width is ${question.width} ft.`;
+            }
 
-    resultDiv.textContent = feedback;
-    resultDiv.style.color = feedback.includes("incorrect") ? "red" : "green";
-}
-       function checkTypingAnswer() {
+            resultDiv.textContent = feedback;
+            resultDiv.style.color = feedback.includes("incorrect") ? "red" : "green";
+        }
+
+        function checkMultipleChoiceAnswer(choice, correctAnswer) {
+            const resultDiv = document.getElementById("result");
+            if (choice === correctAnswer) {
+                resultDiv.textContent = "Correct!";
+                resultDiv.style.color = "green";
+            } else {
+                resultDiv.textContent = `Oops! The correct answer is '${correctAnswer}'.`;
+                resultDiv.style.color = "red";
+            }
+            document.getElementById("next-btn").style.display = "block";
+        }
+
+        function checkTypingAnswer() {
             const question = questions[currentQuestionIndex];
             const userAnswer = document.getElementById("answer").value.trim();
             const resultDiv = document.getElementById("result");
@@ -284,7 +332,19 @@
                 location.reload();
             }
         }
+
+        function getRandomChoices(correctAnswer, numChoices) {
+            const group = Object.values(treeGroups).flat();
+            const otherChoices = group.filter(tree => tree.botanical !== correctAnswer);
+            return otherChoices
+                .sort(() => Math.random() - 0.5)
+                .slice(0, numChoices)
+                .map(tree => tree.botanical + ", " + tree.common.join(", "));
+        }
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
     </script>
 </body>
 </html>
-
