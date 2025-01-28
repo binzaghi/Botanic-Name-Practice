@@ -94,7 +94,7 @@
     <div id="practice-area" style="display: none;">
         <p id="question" class="question"></p>
         <div id="image-container" class="images"></div>
-        <p id="image-info" class="info-message" style="display: none;">No photos available for this tree yet.</p>
+        <p id="image-info" class="info-message" style="display: none;">No photos available for this group yet.</p>
         <div id="options" class="options"></div>
         <div class="height-width-container">
             <label for="height">Height: </label>
@@ -130,51 +130,6 @@
                 { botanical: "Celtis occidentalis", common: ["Hackberry"] },
                 { botanical: "Ginkgo biloba", common: ["Ginkgo"] },
                 { botanical: "Ailanthus altissima", common: ["Tree of Heaven"] }
-            ],
-            "Group 3": [
-                { botanical: "Platanus occidentalis", common: ["American Sycamore"] },
-                { botanical: "Platanus x acerifolia", common: ["London Plane"] },
-                { botanical: "Tilia cordata", common: ["Littleleaf Linden"] },
-                { botanical: "Tilia americana", common: ["American Linden"] },
-                { botanical: "Liriodendron tulipifera", common: ["Tulip Tree"] },
-                { botanical: "Magnolia acuminata", common: ["Cucumber Tree"] },
-                { botanical: "Liquidambar styraciflua", common: ["Sweetgum"] }
-            ],
-            "Group 4": [
-                { botanical: "Amelanchier arborea", common: ["Downy Serviceberry"] },
-                { botanical: "Crataegus spp.", common: ["Hawthorn"] },
-                { botanical: "Malus spp.", common: ["Apple"] },
-                { botanical: "Prunus pensylvanica", common: ["Pin Cherry"] },
-                { botanical: "Prunus serotina", common: ["Black Cherry"] },
-                { botanical: "Prunus virginiana", common: ["Chokecherry"] },
-                { botanical: "Pyrus calleryana 'Chanticleer'", common: ["Chanticleer Pear"] },
-                { botanical: "Sorbus americana", common: ["American Mountain Ash"] },
-                { botanical: "Sorbus aucuparia", common: ["European Mountain Ash"] }
-            ],
-            "Group 5": [
-                { botanical: "Aralia elata", common: ["Japanese Angelica Tree"] },
-                { botanical: "Rhamnus cathartica", common: ["Common Buckthorn"] },
-                { botanical: "Rhus typhina", common: ["Staghorn Sumac"] },
-                { botanical: "Nyssa sylvatica", common: ["Black Gum"] },
-                { botanical: "Morus alba", common: ["White Mulberry"] },
-                { botanical: "Morus rubra", common: ["Red Mulberry"] }
-            ],
-            "Group 6": [
-                { botanical: "Populus alba", common: ["White Poplar"] },
-                { botanical: "Populus balsamifera", common: ["Balsam Poplar"] },
-                { botanical: "Populus grandidentata", common: ["Bigtooth Aspen"] },
-                { botanical: "Populus tremuloides", common: ["Quaking Aspen"] },
-                { botanical: "Populus nigra 'Italica'", common: ["Lombardy Poplar"] },
-                { botanical: "Salix alba 'Tristis'", common: ["Golden Weeping Willow"] },
-                { botanical: "Salix fragilis", common: ["Crack Willow"] },
-                { botanical: "Salix nigra", common: ["Black Willow"] }
-            ],
-            "Group 7": [
-                { botanical: "Ulmus americana", common: ["American Elm"] },
-                { botanical: "Ulmus glabra", common: ["Wych Elm"] },
-                { botanical: "Ulmus procera", common: ["English Elm"] },
-                { botanical: "Ulmus rubra", common: ["Slippery Elm"] },
-                { botanical: "Ulmus pumila", common: ["Siberian Elm"] }
             ]
         };
 
@@ -288,7 +243,8 @@
             if (userWidth === question.width) {
                 feedback += "Width is correct!";
             } else {
-                feedback += `Width is incorrect. Correct width is ${question.width} ft.`;
+                feedback +=
+`Width is incorrect. Correct width is ${question.width} ft.`;
             }
 
             resultDiv.textContent = feedback;
