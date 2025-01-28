@@ -216,61 +216,60 @@
 
     const imagesDiv = document.getElementById("image-container");
     const botanicalName = question.botanical.replace(/ /g, "_");
+    const imagePromises = [];
 
-    let hasImage = false;
+    // Attempt to load images dynamically
     for (let i = 1; i <= 5; i++) {
         const imageUrl = `${imagePath}${botanicalName}_${i}.jpg`;
-        const img = new Image();
-        img.src = imageUrl;
-        img.alt = botanicalName;
-        img.onload = () => { hasImage = true; };
-        img.onerror = () => img.remove();
-        imagesDiv.appendChild(img);
+        imagePromises.push(
+            new Promise((resolve, reject) => {
+                const img = new Image();
+                img.src = imageUrl;
+                img.alt = botanicalName;
+                img.onload = () => {
+                    imagesDiv.appendChild(img);
+                    resolve(true);
+                };
+                img.onerror = () => {
+                    resolve(false); // Image failed to load
+                };
+            })
+        );
     }
 
-    document.getElementById("image-info").style.display = hasImage ? "none" : "block";
+    // Wait for all image attempts to complete
+    Promise.all(imagePromises).then((results) => {
+        const hasImage = results.includes(true);
 
-    if (hasImage) {
-        // For trees with photos: Show "What is the name of the tree shown below?"
-        document.getElementById("question").textContent = "What is the name of the tree shown below?";
+        // Set question text based on image availability
+        if (hasImage) {
+            document.getElementById("question").textContent = "What is the name of the tree shown below?";
+            document.getElementById("image-info").style.display = "none";
+        } else {
+            document.getElementById("question").textContent = `What is the botanical name for '${question.common?.join(", ")}'?`;
+            document.getElementById("image-info").style.display = "block";
+        }
 
+        // Generate multiple-choice options
         const optionsDiv = document.getElementById("options");
-        optionsDiv.innerHTML = ""; // Clear previous options
-        const correctAnswer =
-            question.botanical + ", " + question.common.join(", ");
+        optionsDiv.innerHTML = "";
+        const correctAnswer = question.botanical;
         const choices = shuffle([
-            ...getRandomChoices(question.botanical, 3, true),
-            correctAnswer
+            ...getRandomChoices(correctAnswer, 3, false),
+            correctAnswer,
         ]);
 
-        choices.forEach(choice => {
+        choices.forEach((choice) => {
             const button = document.createElement("button");
             button.textContent = choice;
             button.onclick = () => checkMultipleChoiceAnswer(choice, correctAnswer);
             optionsDiv.appendChild(button);
         });
-    } else {
-        // For trees without photos: Ask "What is the botanical name for 'Common Name'?"
-        document.getElementById("question").textContent = `What is the botanical name for '${question.common.join(", ")}'?`;
 
-        const optionsDiv = document.getElementById("options");
-        optionsDiv.innerHTML = ""; // Clear previous options
-        const correctAnswer = question.botanical;
-        const choices = shuffle([
-            ...getRandomChoices(question.botanical, 3, false),
-            correctAnswer
-        ]);
-
-        choices.forEach(choice => {
-            const button = document.createElement("button");
-            button.textContent = choice; // Only show botanical names for no-photo questions
-            button.onclick = () => checkMultipleChoiceAnswer(choice, correctAnswer);
-            optionsDiv.appendChild(button);
-        });
-    }
-
-    const heightWidthInfo = !question.height || !question.width;
-    document.getElementById("height-width-info").style.display = heightWidthInfo ? "block" : "none";
+        // Display height and width info if available
+        const heightWidthInfo = !question.height || !question.width;
+        document.getElementById("height-width-info").style.display = heightWidthInfo ? "block" : "none";
+    });
 }
 
         function checkHeightWidth() {
