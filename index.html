@@ -91,30 +91,32 @@
     </div>
     <button onclick="confirmGroups()" style="margin-top: 10px;">Confirm Groups</button>
     <button onclick="resetPractice()" style="margin-top: 10px; background-color: #FF6347; border-color: #FF4500;">Reset Groups</button>
-    <div id="practice-area" style="display: none;">
-        <p id="question" class="question"></p>
-        <div id="image-container" class="images"></div>
-        <p id="image-info" class="info-message" style="display: none;">No photos available for this group yet.</p>
-        <div id="options" class="options"></div>
-        <div class="height-width-container">
-            <label for="height">Height: </label>
-            <input type="text" id="height" placeholder="0"> ft
-            <label for="width">Width: </label>
-            <input type="text" id="width" placeholder="0"> ft
-            <button onclick="checkHeightWidth()">Check</button>
-        </div>
-        <p id="height-width-info" class="info-message" style="display: none;">Height and width information not available for this tree.</p>
-        <p id="height-width-result" class="result"></p>
-        <p id="intro" style="font-size: 14px; color: gray; margin-top: 10px; line-height: 1.5;">
+   <!-- Add instructions here so they are always visible -->
+<p id="intro" style="font-size: 14px; color: gray; margin-top: 10px; line-height: 1.5;">
     Choose one or more groups to start the quiz.<br>
     You can always reset your selection by clicking the "Reset Groups" button.<br>
     The "Check Height and Width" section is optional.
 </p>
-        <input type="text" id="answer" style="display: none;" placeholder="Type your answer here">
-        <button id="submit-btn" style="display: none;" onclick="checkTypingAnswer()">Submit</button>
-        <p id="result" class="result"></p>
-        <button id="next-btn" onclick="nextQuestion()">Next</button>
+
+<div id="practice-area" style="display: none;">
+    <p id="question" class="question"></p>
+    <div id="image-container" class="images"></div>
+    <p id="image-info" class="info-message" style="display: none;">No photos available for this group yet.</p>
+    <div id="options" class="options"></div>
+    <div class="height-width-container">
+        <label for="height">Height: </label>
+        <input type="text" id="height" placeholder="0"> ft
+        <label for="width">Width: </label>
+        <input type="text" id="width" placeholder="0"> ft
+        <button onclick="checkHeightWidth()">Check</button>
     </div>
+    <p id="height-width-info" class="info-message" style="display: none;">Height and width information not available for this tree.</p>
+    <p id="height-width-result" class="result"></p>
+    <input type="text" id="answer" style="display: none;" placeholder="Type your answer here">
+    <button id="submit-btn" style="display: none;" onclick="checkTypingAnswer()">Submit</button>
+    <p id="result" class="result"></p>
+    <button id="next-btn" onclick="nextQuestion()">Next</button>
+</div>
     <script>
         const treeGroups = {
             "Group 1": [
