@@ -215,6 +215,10 @@
     document.getElementById("image-container").innerHTML = "";
     document.getElementById("image-info").style.display = "none"; // Hide the "No photos available" message initially
 
+    // Reset height and width inputs to blank
+    document.getElementById("height").value = "";
+    document.getElementById("width").value = "";
+
     const imagesDiv = document.getElementById("image-container");
     const botanicalName = question.botanical.replace(/ /g, "_");
     const imagePromises = [];
