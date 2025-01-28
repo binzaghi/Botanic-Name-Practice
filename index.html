@@ -95,12 +95,12 @@
         const treeGroups = {
             "Group 1": [
                 { botanical: "Betula pendula", common: ["European White Birch"] },
-                { botanical: "Betula papyrifera", common: ["Paper Birch"] },
+                { botanical: "Betula papyrifera", common: ["Paper Birch","Canoe Birth"] },
                 { botanical: "Betula alleghaniensis", common: ["Yellow Birch"] },
                 { botanical: "Betula nigra", common: ["River Birch"] },
-                { botanical: "Alnus glutinosa", common: ["Black Alder"] },
-                { botanical: "Carpinus caroliniana", common: ["Blue Beech"] },
-                { botanical: "Ostrya virginiana", common: ["Eastern Hophornbeam"] },
+                { botanical: "Alnus glutinosa", common: ["European Alder","Black Alder"] },
+                { botanical: "Carpinus caroliniana", common: ["Blue Beech","American Hornbeam"] },
+                { botanical: "Ostrya virginiana", common: ["Ironwood","Eastern Hophornbeam"] },
                 { botanical: "Corylus colurna", common: ["Turkish Hazel"] }
             ],
             "Group 2": [
@@ -206,7 +206,7 @@
             document.getElementById("image-container").innerHTML = "";
 
             if (selectedMode === "typing") {
-                document.getElementById("question").textContent = `What is the botanical name for '${question.common[0]}'?`;
+                document.getElementById("question").textContent = `What is the botanical name for '${question.common.join(",")}'?`;
                 document.getElementById("answer").style.display = "block";
                 document.getElementById("submit-btn").style.display = "block";
                 document.getElementById("options").style.display = "none";
