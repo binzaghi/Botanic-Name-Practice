@@ -43,20 +43,29 @@
             font-weight: bold;
         }
         #height, #width {
-            font-size: 18px;
-            padding: 5px;
-            width: 80px;
-            box-sizing: border-box;
-            border: 2px solid #228B22;
-            border-radius: 5px;
-            text-align: center;
-        }
+    font-size: 18px;
+    padding: 5px;
+    width: 100%; /* Make inputs take full width of their container */
+    max-width: 120px; /* Optional: Set a max width for larger screens */
+    box-sizing: border-box;
+    border: 2px solid #228B22;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.height-width-container button {
+    width: 100%; /* Button takes full width */
+    max-width: 200px; /* Optional: Limit max width */
+    font-size: 18px;
+}
         .height-width-container {
             font-size: 22px;
             margin-top: 15px;
             display: flex;
+            flex-wrap: wrap; /* Allows wrapping for smaller screens */
             align-items: center;
             gap: 10px;
+            justify-content: space-between; /* Ensures proper spacing */
         }
         .images {
             display: flex;
