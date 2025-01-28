@@ -36,8 +36,21 @@
             background-color: #228B22;
         }
         #next-btn {
-            display: none;
-        }
+    display: none; /* Ensure it’s hidden initially */
+    font-size: 18px;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+    border: 2px solid #4682B4; /* Border color: Steel Blue */
+    border-radius: 5px;
+    background-color: #5F9EA0; /* Button background color: Cadet Blue */
+    color: white; /* Text color */
+}
+
+#next-btn:hover {
+    background-color: #4682B4; /* Slightly darker blue on hover */
+    border-color: #4169E1; /* Royal Blue for border on hover */
+}
         #question {
             font-size: 22px;
             font-weight: bold;
