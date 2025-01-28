@@ -150,9 +150,9 @@
     <div id="options" class="options"></div>
     <div class="height-width-container">
         <label for="height">Height: </label>
-        <input type="text" id="height" placeholder="0"> ft
-        <label for="width">Width: </label>
-        <input type="text" id="width" placeholder="0"> ft
+<input type="number" id="height" placeholder="0" min="0" step="1"> ft
+<label for="width">Width: </label>
+<input type="number" id="width" placeholder="0" min="0" step="1"> ft
         <button onclick="checkHeightWidth()">Check</button>
     </div>
     <p id="height-width-info" class="info-message" style="display: none;">Height and width information not available for this tree.</p>
