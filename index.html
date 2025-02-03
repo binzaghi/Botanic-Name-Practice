@@ -134,16 +134,6 @@
         <label><input type="checkbox" value="Group 7"> Group 7</label>
     </div>
     <button onclick="confirmGroups()" style="margin-top: 10px;">Confirm Groups</button>
-
-
-
-<div id="mode-selection" style="display: none; margin-top: 20px;">
-    <p>Choose Answering Mode:</p>
-    <button onclick="startPractice('multiple-choice')">Multiple Choice</button>
-    <button onclick="startPractice('typing')">Type Botanical Name</button>
-</div>
-
-
     <button onclick="resetPractice()" style="margin-top: 10px; background-color: #FF6347; border-color: #FF4500;">Reset Groups</button>
    <!-- Add instructions here so they are always visible -->
 <p id="intro" style="font-size: 14px; color: gray; margin-top: 10px; line-height: 1.5;">
@@ -260,7 +250,7 @@
             document.getElementById("practice-area").style.display = "block";
             moveIntroToBottom(); // Add this line to move the intro text
             currentQuestionIndex = 0;
-            document.getElementById("mode-selection").style.display = "block";
+            showQuestion();
         }
 
         function resetPractice() {
@@ -269,17 +259,6 @@
             selectedGroups = [];
         }
 
-        function startPractice(mode) {
-    answeringMode = mode;
-    document.getElementById("mode-selection").style.display = "none";
-    document.getElementById("practice-area").style.display = "block";
-
-    questions = selectedGroups.map(group => treeGroups[group]).flat();
-    questions = questions.sort(() => Math.random() - 0.5);
-
-    currentQuestionIndex = 0;
-    showQuestion();
-}
         function showQuestion() {
     const question = questions[currentQuestionIndex];
     document.getElementById("result").textContent = "";
@@ -288,26 +267,15 @@
     document.getElementById("image-container").innerHTML = "";
     document.getElementById("image-info").style.display = "none"; // Hide the "No photos available" message initially
 
-    // Reset height and width inputs
+    // Reset height and width inputs to blank
     document.getElementById("height").value = "";
     document.getElementById("width").value = "";
 
-    // Determine if multiple-choice or typing mode
-    if (answeringMode === 'multiple-choice') {
-        document.getElementById("options").style.display = "block";
-        document.getElementById("typing-answer").style.display = "none";
-        displayMultipleChoice(question);
-    } else {
-        document.getElementById("options").style.display = "none";
-        document.getElementById("typing-answer").style.display = "block";
-        document.getElementById("answer").value = ""; // Reset input field for each new question
-    }
-
-    // Load Images Dynamically
     const imagesDiv = document.getElementById("image-container");
     const botanicalName = question.botanical.replace(/ /g, "_");
     const imagePromises = [];
 
+    // Attempt to load images dynamically
     for (let i = 1; i <= 5; i++) {
         const imageUrl = `${imagePath}${botanicalName}_${i}.jpg`;
         imagePromises.push(
@@ -326,21 +294,19 @@
         );
     }
 
-    // Wait for all images to load, then set question text
+    // Wait for all image load attempts to complete
     Promise.all(imagePromises).then((results) => {
         const hasImage = results.includes(true);
-        const commonName = question.common ? question.common.join(", ") : "Unknown Tree";
 
+        // Set question text based on image availability
         if (hasImage) {
             document.getElementById("question").textContent = "What is the name of the tree shown below?";
         } else {
-            document.getElementById("question").textContent = `What is the botanical name for '${commonName}'?`;
+            document.getElementById("question").textContent = `What is the botanical name for '${question.common?.join(", ")}'?`;
             document.getElementById("image-info").style.display = "block"; // Show "No photos available" message
         }
-    });
 
-    // Generate multiple-choice options (only if in multiple-choice mode)
-    if (answeringMode === 'multiple-choice') {
+        // Generate multiple-choice options
         const optionsDiv = document.getElementById("options");
         optionsDiv.innerHTML = "";
         const correctAnswer = question.botanical;
@@ -355,12 +321,12 @@
             button.onclick = () => checkMultipleChoiceAnswer(choice, correctAnswer);
             optionsDiv.appendChild(button);
         });
-    }
 
-    // Display height and width info only if both are available
-    document.getElementById("height-width-info").style.display = question.height && question.width ? "none" : "block";
+        // Display height and width info if available
+        const heightWidthInfo = !question.height || !question.width;
+        document.getElementById("height-width-info").style.display = heightWidthInfo ? "block" : "none";
+    });
 }
-
 
         function checkHeightWidth() {
             const question = questions[currentQuestionIndex];
@@ -398,34 +364,31 @@
             document.getElementById("next-btn").style.display = "block";
         }
 
-       function checkTypingAnswer() {
-    const question = questions[currentQuestionIndex];
-    const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
-    const correctAnswer = question.botanical.toLowerCase();
-    const resultDiv = document.getElementById("result");
+        function checkTypingAnswer() {
+            const question = questions[currentQuestionIndex];
+            const userAnswer = document.getElementById("answer").value.trim();
+            const resultDiv = document.getElementById("result");
 
-    if (userAnswer === correctAnswer) {
-        resultDiv.textContent = "Correct!";
-        resultDiv.style.color = "green";
-    } else {
-        resultDiv.textContent = `Oops! The correct answer is '${question.botanical}'.`;
-        resultDiv.style.color = "red";
-    }
-    document.getElementById("next-btn").style.display = "block";
-}
+            if (userAnswer.toLowerCase() === question.botanical.toLowerCase()) {
+                resultDiv.textContent = "Correct!";
+                resultDiv.style.color = "green";
+            } else {
+                resultDiv.textContent = `Oops! The correct answer is '${question.botanical}'.`;
+                resultDiv.style.color = "red";
+            }
+            document.getElementById("next-btn").style.display = "block";
+        }
 
         function nextQuestion() {
-    document.getElementById("answer").value = ""; // Reset input field on each new question
-    currentQuestionIndex++;
-    
-    if (currentQuestionIndex < questions.length) {
-        showQuestion();
-    } else {
-        alert("You have completed the practice!");
-        document.getElementById("practice-area").style.display = "none";
-        location.reload();
-    }
-}
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                alert("You have completed the practice!");
+                document.getElementById("practice-area").style.display = "none";
+                location.reload();
+            }
+        }
 
         function getRandomChoices(correctAnswer, numChoices, includeCommon) {
     const group = Object.values(treeGroups).flat();
